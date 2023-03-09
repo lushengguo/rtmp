@@ -1,4 +1,0 @@
-[submodule "reactor"]
-	path = reactor
-	url = https://github.com/lushengguo/reactor.git
-	branch = main
