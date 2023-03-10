@@ -165,6 +165,9 @@ void Client::onMessage(reactor::TcpConnectionPtr conn, reactor::Buffer &buffer, 
     case Status::WaitForS01:
         handleS01Connection(conn, buffer);
         break;
+    case Status::ConnectionEstablished:
+
+        break;
     default:
         break;
     }
@@ -172,15 +175,20 @@ void Client::onMessage(reactor::TcpConnectionPtr conn, reactor::Buffer &buffer, 
 
 }  // namespace rtmp
 
-//长连接 要求客户端关闭连接时能检测到
 using namespace reactor;
 using namespace std::placeholders;
 int main(int argc, char **argv)
 {
+    if (argc != 4 || argc != 5)
+    {
+        log_error("Usage : ./rtmp-client <ip> <port> <role:publish/subscriber> [publish file]");
+        exit(-1);
+    }
+
     rtmp::Client *rtmp = new rtmp::Client;
     EventLoop loop;
     INetAddr addr(argv[1], atoi(argv[2]));
-    TcpClient client(&loop, addr, "EchoClient");
+    TcpClient client(&loop, addr, "RtmpClient");
 
     client.set_onConnectionCallback(std::bind(&rtmp::Client::onConnection, rtmp, _1));
     client.set_onMessageCallback(std::bind(&rtmp::Client::onMessage, rtmp, _1, _2, _3));

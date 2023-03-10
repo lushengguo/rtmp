@@ -58,6 +58,7 @@ Server::Status Server::handleC2Connection(reactor::TcpConnectionPtr conn, reacto
     memcpy(&s2, &c1, sizeof(s2));
     s2.epochTime = time(nullptr);
     conn->send((const char *)&s2, sizeof(S2));
+    log_info("rtmp-server: connection established");
     return Status::ConnectionEstablished;
 }
 
@@ -94,19 +95,18 @@ void Server::onMessage(reactor::TcpConnectionPtr conn, reactor::Buffer &buffer, 
 
 } // namespace rtmp
 
-//长连接 要求客户端关闭连接时能检测到
 int main(int argc, char **argv)
 {
     if (argc != 2)
     {
-        log_error("Usage : ./echo-server <port>");
+        log_error("Usage : ./rtmp-server <port>");
         exit(-1);
     }
 
     rtmp::Server *rtmp = new rtmp::Server;
     EventLoop loop;
     INetAddr addr("", atoi(argv[1]));
-    TcpServer server(&loop, addr, "EchoServer");
+    TcpServer server(&loop, addr, "RtmpServer");
 
     server.set_onMessageCallback(std::bind(&rtmp::Server::onMessage, rtmp, _1, _2, _3));
 

@@ -1,3 +1,6 @@
+#ifndef CONNECTION_H
+#define CONNECTION_H
+
 #include <cstdint>
 #include <stdint.h>
 
@@ -34,3 +37,5 @@ struct S2 : C2
 {
 };
 } // namespace rtmp
+
+#endif
